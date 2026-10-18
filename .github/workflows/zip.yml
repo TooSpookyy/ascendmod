@@ -18,7 +18,8 @@ jobs:
         run: unzip -q ./*.zip -d proj
       - name: Mod bauen
         working-directory: proj
-        run: gradle build --no-daemon
+        run: |
+          gradle build --no-daemon > build.log 2>&1 || { echo "=== COMPILERFEHLER (kompakt) ==="; grep -E "error:|symbol:|location:|What went wrong|Could not" build.log | sed 's#.*/de/ascend/client/##'; exit 1; }
       - uses: actions/upload-artifact@v4
         with:
           name: ascendclient-jar
